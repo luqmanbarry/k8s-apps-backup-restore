@@ -1,0 +1,11 @@
+global:
+  operatorUpdateChannel: stable
+  inRetoreMode: false
+  resourceNamePrefix: apps-dr-guide
+
+  storage:
+    provider: aws
+    s3:
+      bucket: apps-dr-guide
+      dirPrefix: oadp
+      region: us-east-1 # Bucket Region

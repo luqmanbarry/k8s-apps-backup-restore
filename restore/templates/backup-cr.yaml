@@ -1,0 +1,22 @@
+{{ if not .Values.isSameCluster }}
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: '10'
+  name: {{ .Values.backup.name | quote }}
+  namespace: {{ include "restore.namespace" . }}
+  labels:
+    velero.io/schedule-name: {{ .Values.global.resourceNamePrefix }}
+    velero.io/storage-location: '{{ .Values.global.resourceNamePrefix }}-1'
+    {{ include "restore.gitopsLabels" . | nindent 4 }}
+spec:
+  csiSnapshotTimeout: 72h0m0s
+  defaultVolumesToRestic: true
+  metadata: {}
+  ttl: 720h0m0s
+  storageLocation: "{{ .Values.global.resourceNamePrefix }}-1"
+  volumeSnapshotLocations:
+    - "{{ .Values.global.resourceNamePrefix }}-1"
+  hooks: {}
+{{ end }}

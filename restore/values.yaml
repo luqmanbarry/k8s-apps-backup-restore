@@ -1,0 +1,12 @@
+isSameCluster: false # Set this flag to true if the RESTORE cluster is the same as the BACKUP cluster
+
+global:
+  operatorUpdateChannel: stable # OADP Operator Sub Channel
+  inRestoreMode: true # DO NOT CHANGE
+  resourceNamePrefix: apps-dr-guide
+
+backup:
+  name: "apps-dr-guide-20231016200052" # Value comes from S3 bucket
+  excludedNamespaces: [] # Leave empty unless you want to exclude certain namesapces from being restored.
+  includedNamespaces: [] # Leave empty if you want all namespaces. You may provide namespaces if you want to restore a subset.
+

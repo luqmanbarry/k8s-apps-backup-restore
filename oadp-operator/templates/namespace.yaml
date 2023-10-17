@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    argocd.argoproj.io/managed-by: openshift-gitops
+    #clusterresourceoverrides.admission.autoscaling.openshift.io/enabled: "true"
+    {{ include "oadp-operator.gitopsLabels" . | nindent 4 }}
+  annotations:
+    argocd.argoproj.io/sync-wave: '0'
+  name: openshift-adp

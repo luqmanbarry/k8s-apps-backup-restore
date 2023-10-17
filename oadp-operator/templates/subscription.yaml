@@ -1,0 +1,16 @@
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+  labels:
+    operators.coreos.com/redhat-oadp-operator.{{ include "oadp-operator.namespace" . }}: ""
+    {{ include "oadp-operator.gitopsLabels" . | nindent 4 }}
+  name: redhat-oadp-operator
+  namespace: {{ include "oadp-operator.namespace" . }}
+spec:
+  channel: {{ .Values.global.operatorUpdateChannel }}
+  installPlanApproval: Automatic
+  name: redhat-oadp-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace

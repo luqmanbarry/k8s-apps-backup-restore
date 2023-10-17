@@ -1,0 +1,26 @@
+---
+apiVersion: velero.io/v1
+kind: Restore
+metadata:
+  name: {{ .Values.backup.name | quote }}
+  namespace: {{ include "restore.namespace" . }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "20"
+  labels:
+    {{ include "restore.gitopsLabels" . | nindent 4 }}
+spec:
+  # Get backupName from the S3 bucket
+  backupName: {{ .Values.backup.name | quote }}
+  excludedResources:
+  - nodes
+  - events
+  - events.events.k8s.io
+  #- backups.velero.io
+  #- restores.velero.io
+  #- resticrepositories.velero.io
+  restorePVs: true
+  excludedNamespaces:
+    {{ toYaml .Values.backup.excludedNamespaces | nindent 4 }}
+  includedNamespaces:
+    {{ toYaml .Values.backup.includedNamespaces | nindent 4 }}
+

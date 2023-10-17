@@ -1,0 +1,11 @@
+{{ if not .Values.isSameCluster }}
+{{ $glob_pvb := .Files.Glob "configs/*.yaml" }}
+{{ if $glob_pvb }}
+apiVersion: v1
+kind: List
+metadata:
+  name: pod-volume-backup-crs
+items:
+{{ .Files.Get "configs/pvbs.yaml" | indent 2 }}
+{{ end }}
+{{ end }}

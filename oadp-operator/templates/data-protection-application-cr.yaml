@@ -1,0 +1,54 @@
+---
+apiVersion: oadp.openshift.io/v1alpha1
+kind: DataProtectionApplication
+metadata:
+  name: {{ .Values.global.resourceNamePrefix }}
+  namespace: {{ include "oadp-operator.namespace" . }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+  labels:
+    {{ include "oadp-operator.gitopsLabels" . | nindent 4 }}
+spec:
+  backupImages: true
+  configuration:
+    velero:
+      defaultPlugins:
+        - openshift
+        - aws
+        - csi
+      featureFlags:
+        - EnableCSI
+    restic:
+      enable: true
+      timeout: 24h
+    #nodeAgent:
+    #  enable: true
+    #  uploaderType: restic
+    #resourceTimeout: 4h
+  backupLocations:
+    - name: default
+      default: true
+      velero:
+        provider: {{ .Values.global.storage.provider | quote }}
+        default: true
+        {{ if .Values.global.inRestoreMode }}
+        accessMode: ReadOnly
+        {{ end }}
+        objectStorage:
+          bucket: {{ .Values.global.storage.s3.bucket | quote }}
+          prefix: {{ .Values.global.storage.s3.dirPrefix | quote }}
+        config:
+          region: {{ .Values.global.storage.s3.region | quote }}
+          profile: "default"
+        credential:
+          name: cloud-credentials
+          key: cloud
+  snapshotLocations:
+    - name: default
+      default: true
+      velero:
+        provider: {{ .Values.global.storage.provider | quote }}
+        config:
+          region: {{ .Values.global.storage.s3.region | quote }}
+          profile: "default"
+
