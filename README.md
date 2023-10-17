@@ -95,9 +95,10 @@ recovering lost/deleted Kubernetes API objects.
 -   Linux Packages:
     `yq, jq, python3, python3-pip, nfs-utils, openshift-cli, aws-cli`
 
--   Configure your bash_profile (`~/.bashrc`): ```sh alias
-    velero=*oc -n openshift-adp exec deployment/velero -c velero
-    -it — ./velero* ```
+-   Configure your bash_profile (`~/.bashrc`): 
+    ```sh 
+    alias velero='oc -n openshift-adp exec deployment/velero -c velero -it — ./velero'
+    ```
 
 -   Permission to run commands with `sudo`
 
