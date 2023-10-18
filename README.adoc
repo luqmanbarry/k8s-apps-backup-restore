@@ -127,8 +127,7 @@ Login to the BACKUP cluster
 BACKUP_CLUSTER_SA_TOKEN=CHANGE_ME
 BACKUP_CLUSTER_API_SERVER=CHANGE_ME
 
-oc login --token=$BACKUP_CLUSTER_SA_TOKEN \
-  --server=$BACKUP_CLUSTER_API_SERVER
+oc login --token=$BACKUP_CLUSTER_SA_TOKEN --server=$BACKUP_CLUSTER_API_SERVER
 ```
 
 Add the BACKUP cluster to ArgoCD
@@ -189,8 +188,7 @@ Login to the BACKUP cluster
 BACKUP_CLUSTER_SA_TOKEN=CHANGE_ME
 BACKUP_CLUSTER_API_SERVER=CHANGE_ME
 
-oc login --token=$BACKUP_CLUSTER_SA_TOKEN \
-  --server=$BACKUP_CLUSTER_API_SERVER
+oc login --token=$BACKUP_CLUSTER_SA_TOKEN --server=$BACKUP_CLUSTER_API_SERVER
 ```
 
 Deploy https://github.com/luqmanbarry/k8s-apps-backup-restore/blob/main/sample-apps/web-app1.yaml[web-app1] and https://github.com/luqmanbarry/k8s-apps-backup-restore/blob/main/sample-apps/web-app2.yaml[web-app2].
@@ -291,8 +289,7 @@ Log on to the OCP cluster where the GitOps instance is running.
 OCP_CLUSTER_SA_TOKEN=CHANGE_ME
 OCP_CLUSTER_API_SERVER=CHANGE_ME
 
-oc login --token=$OCP_CLUSTER_SA_TOKEN \
-  --server=$OCP_CLUSTER_API_SERVER
+oc login --token=$OCP_CLUSTER_SA_TOKEN --server=$OCP_CLUSTER_API_SERVER
 ```
 
 
@@ -346,8 +343,7 @@ Login to the RESTORE cluster
 RESTORE_CLUSTER_SA_TOKEN=CHANGE_ME
 RESTORE_CLUSTER_API_SERVER=CHANGE_ME
 
-oc login --token=$RESTORE_CLUSTER_SA_TOKEN \
-  --server=$RESTORE_CLUSTER_API_SERVER
+oc login --token=$RESTORE_CLUSTER_SA_TOKEN --server=$RESTORE_CLUSTER_API_SERVER
 ```
 
 Login to the ArgoCD CLI
@@ -468,8 +464,7 @@ Log on to the OCP cluster where the GitOps instance is running; in our case, it 
 OCP_CLUSTER_SA_TOKEN=CHANGE_ME
 OCP_CLUSTER_API_SERVER=CHANGE_ME
 
-oc login --token=$OCP_CLUSTER_SA_TOKEN \
-  --server=$OCP_CLUSTER_API_SERVER
+oc login --token=$OCP_CLUSTER_SA_TOKEN --server=$OCP_CLUSTER_API_SERVER
 ```
 
 Before applying the ArgoCD `Application` to trigger the recovery, I will simulate a DR by shutting down the BACKUP cluster.
@@ -511,7 +506,7 @@ OADP by default scales down `DeploymentConfigs` and does not clean up orphaned p
 Login to the RESTORE OpenShift Cluster
 
 ```sh
-oc login --token=<SA_TOKEN_VALUE> --server=<CONTROLE_PLANE_API_SERVER>
+oc login --token=SA_TOKEN_VALUE --server=CONTROL_PLANE_API_SERVER
 ```
 
 Run the cleanup script.
@@ -550,7 +545,7 @@ alias velero='oc -n openshift-adp exec deployment/velero -c velero -it -- ./vele
 Login to the BACKUP OCP Cluster
 
 ```sh
-oc login --token=<SA_TOKEN_VALUE> --server=<BACKUP_CLUSTER_CONTROLE_PLANE_API_SERVER>
+oc login --token=SA_TOKEN_VALUE --server=BACKUP_CLUSTER_CONTROL_PLANE_API_SERVER
 ```
 
 Describe the Backup
@@ -582,7 +577,7 @@ velero backup logs BACKUP_NAME | grep 'level=error'
 Login to the RESTORE OCP Cluster
 
 ```sh
-oc login --token=<SA_TOKEN_VALUE> --server=<RESTORE_CLUSTER_CONTROLE_PLANE_API_SERVER>
+oc login --token=SA_TOKEN_VALUE --server=RESTORE_CLUSTER_CONTROL_PLANE_API_SERVER
 ```
 
 Describe the Restore CR

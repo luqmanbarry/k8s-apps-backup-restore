@@ -688,7 +688,7 @@ to do the clean up.
 Login to the RESTORE OpenShift Cluster
 
 ```sh 
-oc login --token=SA_TOKEN_VALUE --server=CONTROLE_PLANE_API_SERVER 
+oc login --token=SA_TOKEN_VALUE --server=CONTROL_PLANE_API_SERVER 
 ```
 
 Run the cleanup script.
@@ -741,7 +741,7 @@ alias velero='oc -n openshift-adp exec deployment/velero -c velero -it — .
 Login to the BACKUP OCP Cluster
 
 ```sh 
-oc login --token=SA_TOKEN_VALUE --server=BACKUP_CLUSTER_CONTROLE_PLANE_API_SERVER 
+oc login --token=SA_TOKEN_VALUE --server=BACKUP_CLUSTER_CONTROL_PLANE_API_SERVER 
 ```
 
 Describe the Backup
@@ -773,7 +773,7 @@ velero backup logs BACKUP_NAME | grep 'level=error'
 Login to the RESTORE OCP Cluster
 
 ```sh 
-oc login --token=SA_TOKEN_VALUE --server=RESTORE_CLUSTER_CONTROLE_PLANE_API_SERVER 
+oc login --token=SA_TOKEN_VALUE --server=RESTORE_CLUSTER_CONTROL_PLANE_API_SERVER 
 ```
 
 Describe the Restore CR
