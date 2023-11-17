@@ -1,0 +1,65 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: apps-dr-backup
+  namespace: openshift-gitops
+  #finalizers:
+  #  - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/part-of: apps-dr
+spec:
+  project: default
+
+  source:
+    repoURL: https://github.com/luqmanbarry/k8s-apps-backup-restore.git
+    targetRevision: main
+    path: backup
+
+  # Destination cluster and namespace to deploy the application
+  destination:
+    # cluster name in ArgoCD UI
+    name: apps-dr-backup
+    # name: in-cluster
+    namespace: openshift-adp
+    
+  # NO NEED TO CHANGE BELOW PARAMS
+
+  # Sync policy
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - Validate=false
+    - CreateNamespace=true
+    - PrunePropagationPolicy=foreground
+    - PruneLast=true
+    - RespectIgnoreDifferences=true
+    
+    retry:
+      limit: 5
+      backoff:
+        duration: 15s
+        factor: 2
+        maxDuration: 720h
+
+
+  # Apply metadata to namespaces
+  managedNamespaceMetadata:
+    labels:
+      argocd.argoproj.io/managed-by: openshift-gitops
+    annotations:
+      argocd.argoproj.io/sync-wave: '0'
+
+  ignoreDifferences:
+  - group: oadp.openshift.io
+    kind: DataProtectionApplication
+    jqPathExpressions:
+      - '.spec.backupLocations'
+      - '.spec.snapshotLocations'
+      - '.spec.configuration.featureFlags'
+      - '.spec.configuration.nodeAgent'
+
+  revisionHistoryLimit: 10

@@ -1,0 +1,18 @@
+global:
+  operatorUpdateChannel: stable-1.2 # OADP Operator Sub Channel
+  inRestoreMode: false # SKIP - DO NOT CHANGE
+  resourceNamePrefix: apps-dr-guide # OADP CRs name prefix
+  
+  storage:
+    provider: aws # SKIP - DO NOT CHANGE
+    s3:
+      bucket: apps-dr-guide # S3 BUCKET NAME
+      dirPrefix: oadp
+      region: us-east-1 # Bucket Region
+
+backup:
+  cronSchedule: "0 */1 * * *" # Cron Schedule - Use https://crontab.guru if you need assistance
+  excludedNamespaces: []
+  includedNamespaces:
+  - web-app1
+  - web-app2

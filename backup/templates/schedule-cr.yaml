@@ -1,0 +1,23 @@
+---
+apiVersion: velero.io/v1
+kind: Schedule
+metadata:
+  name: {{ .Values.global.resourceNamePrefix }}
+  namespace: {{ include "backup.namespace" . }}
+  annotations:
+    argocd.argoproj.io/sync-wave: "10"
+  labels:
+    velero.io/storage-location: default
+    {{ include "backup.gitopsLabels" . | nindent 4 }}
+spec:
+  schedule: {{ .Values.backup.cronSchedule | quote }}
+  useOwnerReferencesInBackup: true
+  template:
+    defaultVolumesToRestic: true
+    storageLocation: apps-dr-guide-1
+    csiSnapshotTimeout: 72h
+    ttl: 720h
+    excludedNamespaces:
+      {{ toYaml .Values.backup.excludedNamespaces | nindent 8 }}
+    includedNamespaces:
+      {{ toYaml .Values.backup.includedNamespaces | nindent 8 }}

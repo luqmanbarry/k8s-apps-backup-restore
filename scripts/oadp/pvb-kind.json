@@ -1,0 +1,82 @@
+[
+  {
+    "metadata": {
+      "name": "apps-dr-guide-20231016200052-d4qtd",
+      "namespace": "openshift-adp",
+      "creationTimestamp": "2023-10-16T20:01:06Z",
+      "labels": {
+        "velero.io/backup-name": "apps-dr-guide-20231016200052",
+        "velero.io/backup-uid": "65ea8547-24f0-4e92-ab29-aade6e32693b",
+        "velero.io/pvc-uid": "f1fa7de4-1058-452f-a8a1-fbcd201bcc5f"
+      },
+      "annotations": {
+        "velero.io/pvc-name": "web-app1"
+      }
+    },
+    "spec": {
+      "pod": {
+        "kind": "Pod",
+        "namespace": "web-app1",
+        "name": "web-app1-69df99bf58-kxdzr",
+        "uid": "c9b4fdd5-7493-496e-994b-6b1d6cc4bf22"
+      },
+      "volume": "web-app1",
+      "backupStorageLocation": "apps-dr-guide-1",
+      "repoIdentifier": "s3:s3-us-east-1.amazonaws.com/apps-dr-guide/oadp/restic/web-app1",
+      "uploaderType": "restic"
+    },
+    "status": {
+      "phase": "Completed",
+      "path": "/host_pods/c9b4fdd5-7493-496e-994b-6b1d6cc4bf22/volumes/kubernetes.io~csi/pvc-f1fa7de4-1058-452f-a8a1-fbcd201bcc5f/mount",
+      "snapshotID": "53fb84c7",
+      "startTimestamp": "2023-10-16T20:01:06Z",
+      "completionTimestamp": "2023-10-16T20:01:09Z",
+      "progress": {
+        "totalBytes": 1389050824,
+        "bytesDone": 1389050824
+      }
+    },
+    "kind": "PodVolumeBackup",
+    "apiVersion": "velero.io/v1"
+  },
+  {
+    "metadata": {
+      "name": "apps-dr-guide-20231016200052-96hsh",
+      "namespace": "openshift-adp",
+      "creationTimestamp": "2023-10-16T20:01:09Z",
+      "labels": {
+        "velero.io/backup-name": "apps-dr-guide-20231016200052",
+        "velero.io/backup-uid": "65ea8547-24f0-4e92-ab29-aade6e32693b",
+        "velero.io/pvc-uid": "7732f86a-12d2-47e7-91ca-200fad6813d0"
+      },
+      "annotations": {
+        "velero.io/pvc-name": "web-app2"
+      }
+    },
+    "spec": {
+      "pod": {
+        "kind": "Pod",
+        "namespace": "web-app2",
+        "name": "web-app2-21-stdsf",
+        "uid": "5457717c-dfd3-4dc3-80c9-4437ea56d2c9"
+      },
+      "volume": "web-app2",
+      "backupStorageLocation": "apps-dr-guide-1",
+      "repoIdentifier": "s3:s3-us-east-1.amazonaws.com/apps-dr-guide/oadp/restic/web-app2",
+      "uploaderType": "restic"
+    },
+    "status": {
+      "phase": "Completed",
+      "path": "/host_pods/5457717c-dfd3-4dc3-80c9-4437ea56d2c9/volumes/kubernetes.io~csi/pvc-7732f86a-12d2-47e7-91ca-200fad6813d0/mount",
+      "snapshotID": "495f813a",
+      "startTimestamp": "2023-10-16T20:01:09Z",
+      "completionTimestamp": "2023-10-16T20:01:13Z",
+      "progress": {
+        "totalBytes": 1398495028,
+        "bytesDone": 1398495028
+      }
+    },
+    "kind": "PodVolumeBackup",
+    "apiVersion": "velero.io/v1"
+  }
+]

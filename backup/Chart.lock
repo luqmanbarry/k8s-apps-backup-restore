@@ -1,0 +1,6 @@
+dependencies:
+- name: oadp-operator
+  repository: file://../oadp-operator
+  version: 1.0.0
+digest: sha256:68d0a7cdc9286b159ca2f49fd47472575a9c373068ee0b3a1fef72fc7ba78e33
+generated: "2023-10-13T10:10:10.934889-05:00"

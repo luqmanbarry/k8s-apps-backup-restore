@@ -1,0 +1,149 @@
+---
+kind: Template
+apiVersion: template.openshift.io/v1
+metadata:
+  name: web-app3
+parameters:
+- name: RANDOM_STR
+  generate: expression 
+  from: "[a-z0-9]{5}"
+
+- name: APP_NAME
+  displayName: APP_IDENTIFIER
+  value: web-app3
+
+- name: STORAGE_CLASS
+  # value: gp2-csi
+  # value: gp3-csi
+  # value: efs-sc
+  value: ocs-external-storagecluster-ceph-rbd
+
+- name: PV_SIZE
+  value: "10Gi"
+
+- name: MOUNT_PATH
+  value: /app-data
+
+- name: IMAGE
+  value: image-registry.openshift-image-registry.svc:5000/openshift/httpd
+
+objects:
+- apiVersion: v1
+  kind: Namespace
+  metadata:
+    name: ${APP_NAME}
+  spec: {}
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: ${APP_NAME}
+    namespace: ${APP_NAME}
+  spec:
+    accessModes:
+      - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${PV_SIZE}
+    storageClassName: ${STORAGE_CLASS}
+    volumeMode: Filesystem
+- apiVersion: apps/v1
+  kind: StatefulSet
+  metadata:
+    name: ${APP_NAME}-${RANDOM_STR}
+    namespace: ${APP_NAME}
+  spec:
+    selector:
+      matchLabels:
+        app: ${APP_NAME}
+    serviceName: ${APP_NAME}
+    replicas: 1
+    template:
+      metadata:
+        labels:
+          app: ${APP_NAME}
+      spec:
+        terminationGracePeriodSeconds: 10
+        containers:
+        - name: ${APP_NAME}-server
+          image: ${IMAGE}
+          ports:
+            - containerPort: 8080
+        - name: ${APP_NAME}-data-loader
+          ports:
+            - containerPort: 8081
+          resources:
+            requests:
+              memory: 100Mi
+              cpu: 50m
+            limits:
+              memory: 300Mi
+              cpu: 250m
+          env:
+            - name: NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: spec.nodeName
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: VOL_MOUNT_PATH
+              value: ${MOUNT_PATH}
+          image: ${IMAGE}
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - mountPath: ${MOUNT_PATH}
+              name: ${APP_NAME}
+          command:
+            - /bin/sh
+            - -c
+            - |-
+              for i in {1..10}; 
+              do
+                dd if=/dev/urandom of=${VOL_MOUNT_PATH}/${POD_NAME}_oadp-random_${i}.log bs=1M count=30;
+              done
+
+              while true; 
+              do 
+                DATA_DIR=${VOL_MOUNT_PATH}/$(date +"%Y%m%d%H")_POD_${POD_NAME}_NODE_${NODE_NAME};
+                mkdir -p ${DATA_DIR};
+                output="$(date +"%Y-%m-%d_%H-%M-%S-%3N")"; 
+                file_name="oadp-$(date +"%m%d%Y-T%H%M").log";
+                echo "Current Timestamp: ${output}";
+                echo "Written on: ${output}" >> ${DATA_DIR}/${file_name};
+                sleep 1; 
+              done
+        volumes:
+        - name: ${APP_NAME}
+          persistentVolumeClaim:
+            claimName: ${APP_NAME}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
+    namespace: ${APP_NAME}
+  spec:
+    ports:
+    - port: 8080
+      targetPort: 8080
+    selector:
+      app: ${APP_NAME}
+    type: LoadBalancer
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    name: ${APP_NAME}
+    namespace: ${APP_NAME}
+    labels:
+      app: ${APP_NAME}
+      service: ${APP_NAME}
+  spec:
+    to:
+      kind: Service
+      name: ${APP_NAME}
+    port:
+      targetPort: 8080
+labels:
+  app.kubernetes.io/part-of: web-app3
